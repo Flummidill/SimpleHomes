@@ -25,8 +25,8 @@ commands:
     permission-message: You do not have access to this command.
 permissions:
   simplehomes.use:
-    description: Allows use of simple homes commands
+    description: Allows use of Player Commands
     default: true
   simplehomes.admin:
-    description: Allows use of homeadmin commands and bypass home limits
+    description: Allows use of Admin Commands and bypassing Home-Limits
     default: op
