@@ -1,4 +1,7 @@
-# SimpleHomes
+<div align="center">
+  <img src="https://github.com/Flummidill/SimpleHomes/blob/master/SimpleHomes.png?raw=true" alt="SimpleHomes-Icon">
+  <h1>SimpleHomes</h1>
+</div>
 
 Commands:
 ```
