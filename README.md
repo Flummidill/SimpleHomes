@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/Flummidill/SimpleHomes/blob/master/SimpleHomes.png?raw=true" alt="SimpleHomes-Icon">
+  <img src="https://github.com/Flummidill/SimpleHomes/blob/master/icons/SimpleHomes-250x250.png?raw=true" alt="SimpleHomes-Icon">
   <h1>SimpleHomes</h1>
 </div>
 
