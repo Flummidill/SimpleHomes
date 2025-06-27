@@ -1,0 +1,32 @@
+name: SimpleHomes
+main: com.flummidill.simplehomes.SimpleHomes
+version: 1.0.0
+api-version: 1.13
+commands:
+  sethome:
+    description: Set a home at your current location.
+    usage: /sethome <number>
+    permission: simplehomes.use
+    permission-message: You do not have access to this command.
+  home:
+    description: Teleport to a saved home.
+    usage: /home <number>
+    permission: simplehomes.use
+    permission-message: You do not have access to this command.
+  delhome:
+    description: Delete a saved home.
+    usage: /delhome <number>
+    permission: simplehomes.use
+    permission-message: You do not have access to this command.
+  homeadmin:
+    description: Admin commands to manage homes for other players.
+    usage: /homeadmin <sethome|home|delhome|maxhomes> <player> <number>
+    permission: simplehomes.admin
+    permission-message: You do not have access to this command.
+permissions:
+  simplehomes.use:
+    description: Allows use of simple homes commands
+    default: true
+  simplehomes.admin:
+    description: Allows use of homeadmin commands and bypass home limits
+    default: op

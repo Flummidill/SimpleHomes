@@ -1,0 +1,5 @@
+# Ignore Git Folder
+/.git/
+
+# Ignore Output Folder
+/target/
