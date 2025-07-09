@@ -1,6 +1,6 @@
 name: SimpleHomes
 main: com.flummidill.simplehomes.SimpleHomes
-version: 1.0.0
+version: ${project.version}
 api-version: 1.13
 commands:
   sethome:

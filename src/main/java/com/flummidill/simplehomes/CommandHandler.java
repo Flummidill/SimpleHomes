@@ -25,7 +25,7 @@ public class CommandHandler implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage("Only players can run this command.");
+            sender.sendMessage("§cOnly Players can run this Command!");
             return true;
         }
 
@@ -33,7 +33,7 @@ public class CommandHandler implements CommandExecutor {
 
         String cmd = command.getName().toLowerCase();
 
-        manager.saveOfflinePlayer(player.getName(), player.getUniqueId());
+        manager.saveOfflinePlayer(player.getUniqueId(), player.getName());
 
         switch (cmd) {
             case "sethome":
@@ -88,54 +88,55 @@ public class CommandHandler implements CommandExecutor {
     private boolean handleSetHome(Player player, String arg) {
         UUID uuid = player.getUniqueId();
         int maxHomes = manager.getMaxHomes(uuid);
-
         int homeNum;
+
         try {
             homeNum = Integer.parseInt(arg);
         } catch (NumberFormatException e) {
             player.sendMessage("§cHome number must be a valid integer.");
-            return true;
+            return false;
         }
 
         if (!player.hasPermission("simplehomes.admin")) {
             if (homeNum < 1 || homeNum > maxHomes) {
                 player.sendMessage("§cYou can only set homes between 1 and " + maxHomes + ".");
-                return true;
+                return false;
             }
         }
 
         if (manager.homeExists(uuid, homeNum)) {
             player.sendMessage("§cHome " + homeNum + " already exists.");
-            return true;
-        } else {
-            manager.setHome(uuid, homeNum, player.getLocation());
-            player.sendMessage("§aHome " + homeNum + " set!");
+            return false;
         }
+
+        manager.setHome(uuid, homeNum, player.getLocation());
+        player.sendMessage("§aHome " + homeNum + " set!");
+
         return true;
     }
 
     private boolean handleHome(Player player, String arg) {
         UUID uuid = player.getUniqueId();
         int maxHomes = manager.getMaxHomes(uuid);
-
         int homeNum;
+
         try {
             homeNum = Integer.parseInt(arg);
         } catch (NumberFormatException e) {
             player.sendMessage("§cHome number must be a valid integer.");
-            return true;
+            return false;
         }
 
         if (!player.hasPermission("simplehomes.admin")) {
             if (homeNum < 1 || homeNum > maxHomes) {
                 player.sendMessage("§cYou can only use homes between 1 and " + maxHomes + ".");
-                return true;
+                return false;
             }
         }
 
         if (!manager.homeExists(uuid, homeNum)) {
             player.sendMessage("§cHome " + homeNum + " does not exist.");
-            return true;
+            return false;
         }
 
         // Cancel any ongoing Teleport Tasks for Player
@@ -152,25 +153,25 @@ public class CommandHandler implements CommandExecutor {
     private boolean handleDelHome(Player player, String arg) {
         UUID uuid = player.getUniqueId();
         int maxHomes = manager.getMaxHomes(uuid);
-
         int homeNum;
+
         try {
             homeNum = Integer.parseInt(arg);
         } catch (NumberFormatException e) {
             player.sendMessage("§cHome number must be a valid integer.");
-            return true;
+            return false;
         }
 
         if (!player.hasPermission("simplehomes.admin")) {
             if (homeNum < 1 || homeNum > maxHomes) {
                 player.sendMessage("§cYou can only delete homes between 1 and " + maxHomes + ".");
-                return true;
+                return false;
             }
         }
 
         if (!manager.homeExists(uuid, homeNum)) {
             player.sendMessage("§cHome " + homeNum + " does not exist.");
-            return true;
+            return false;
         }
 
         manager.deleteHome(uuid, homeNum);
@@ -182,7 +183,7 @@ public class CommandHandler implements CommandExecutor {
         String action = args[0].toLowerCase();
         String targetName = args[1];
         String numberStr = args[2];
-        UUID targetUUID = null;
+        UUID targetUUID;
 
         Player target = Bukkit.getPlayerExact(targetName);
         if (target != null) {
@@ -191,7 +192,7 @@ public class CommandHandler implements CommandExecutor {
             targetUUID = manager.getOfflinePlayerUUID(targetName);
         } else {
             sender.sendMessage("§cPlayer '" + targetName + "' not found.");
-            return true;
+            return false;
         }
 
         targetName = manager.getOfflinePlayerName(targetUUID);
@@ -201,14 +202,14 @@ public class CommandHandler implements CommandExecutor {
             number = Integer.parseInt(numberStr);
         } catch (NumberFormatException e) {
             sender.sendMessage("§cNumber must be a valid integer.");
-            return true;
+            return false;
         }
 
         switch (action) {
             case "sethome":
                 if (manager.homeExists(targetUUID, number)) {
                     sender.sendMessage("§cHome " + number + " already exists for " + targetName + ".");
-                    return true;
+                    return false;
                 } else {
                     manager.setHome(targetUUID, number, sender.getLocation());
                     sender.sendMessage("§aSet Home " + number + " of " + targetName + ".");
@@ -219,7 +220,7 @@ public class CommandHandler implements CommandExecutor {
                 Location loc = manager.getHome(targetUUID, number);
                 if (loc == null) {
                     sender.sendMessage("§cHome " + number + " does not exist for " + targetName + ".");
-                    return true;
+                    return false;
                 }
                 
                 // Cancel any ongoing Teleport Tasks for Player
@@ -232,7 +233,7 @@ public class CommandHandler implements CommandExecutor {
             case "delhome":
                 if (!manager.homeExists(targetUUID, number)) {
                     sender.sendMessage("§cHome " + number + " does not exist for " + targetName + ".");
-                    return true;
+                    return false;
                 }
                 manager.deleteHome(targetUUID, number);
                 sender.sendMessage("§aDeleted Home " + number + " of " + targetName + ".");
@@ -241,7 +242,7 @@ public class CommandHandler implements CommandExecutor {
             case "maxhomes":
                 if (number < 1 || number > 50) {
                     sender.sendMessage("§cNumber must be between 1 and 50.");
-                    return true;
+                    return false;
                 }
                 manager.setMaxHomes(targetUUID, number);
                 sender.sendMessage("§aSet max homes for " + targetName + " to " + number + ".");
@@ -249,7 +250,7 @@ public class CommandHandler implements CommandExecutor {
 
             default:
                 sender.sendMessage("§cUsage: /homeadmin <sethome|home|delhome|maxhomes> <player> <number>");
-                return true;
+                return false;
         }
 
         return true;

@@ -11,9 +11,9 @@ public class TeleportTask {
     private final SimpleHomes plugin;
     private final Player player;
     private final Location targetLocation;
+    private final int homeNum;
 
     private int secondsLeft;
-    private int homeNum;
     private Location startLocation;
     private BukkitRunnable task;
 

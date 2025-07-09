@@ -1,8 +1,12 @@
-#############################
+# # # # # # # # # # # # # # #
 # SimpleHomes Configuration #
 #       By Flummidill       #
-#############################
+# # # # # # # # # # # # # # #
 
 # The default number of Homes allowed for Players (Standard: 3)
 # Must be a Number from 1-50
 max-homes: 3
+
+# The Config Version
+# Do not change this Value
+config-version: 1.1.0

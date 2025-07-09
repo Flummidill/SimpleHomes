@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
 import java.io.File;
 import java.sql.*;
 import java.util.*;
@@ -57,9 +56,27 @@ public class HomeManager {
 
             // Offline-Players Table
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS offline_players (" +
-                    "plr_name TEXT NOT NULL," +
                     "uuid TEXT NOT NULL," +
-                    "PRIMARY KEY(plr_name))");
+                    "plr_name TEXT NOT NULL UNIQUE," +
+                    "PRIMARY KEY(uuid))");
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to create tables in SQLite database.");
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlugin() {
+        try (Statement stmt = connection.createStatement()) {
+            plugin.getLogger().info("Updating DB-Table offline_players to Version 1.1.0");
+
+            // Delete Old Table
+            stmt.executeUpdate("DROP TABLE IF EXISTS offline_players");
+
+            // Create New Table
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS offline_players (" +
+                "uuid TEXT NOT NULL," +
+                "plr_name TEXT NOT NULL UNIQUE," +
+                "PRIMARY KEY(uuid))");
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to create tables in SQLite database.");
             e.printStackTrace();
@@ -67,8 +84,6 @@ public class HomeManager {
     }
 
     public int getMaxHomes(UUID uuid) {
-        Player player = Bukkit.getPlayer(uuid);
-
         try (PreparedStatement ps = connection.prepareStatement("SELECT home_limit FROM home_limits WHERE uuid = ?")) {
             ps.setString(1, uuid.toString());
             ResultSet rs = ps.executeQuery();
@@ -124,13 +139,22 @@ public class HomeManager {
     }
 
     public void setHome(UUID uuid, int homeNum, Location loc) {
+        Player player = Bukkit.getPlayer(uuid);
+
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO homes(uuid, home_num, world, x, y, z, pitch, yaw) VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
                         "ON CONFLICT(uuid, home_num) DO NOTHING")) {
 
             ps.setString(1, uuid.toString());
             ps.setInt(2, homeNum);
-            ps.setString(3, loc.getWorld().getName());
+            if (!(loc.getWorld() == null)) {
+                ps.setString(3, loc.getWorld().getName());
+            } else {
+                if (!(player == null)) {
+                    player.sendMessage("§cFailed to set Home!");
+                }
+                return;
+            }
 
             // Center of Block
             ps.setDouble(4, Math.floor(loc.getX()) + 0.5);
@@ -196,13 +220,54 @@ public class HomeManager {
         return null;
     }
 
-    public void saveOfflinePlayer(String playerName, UUID uuid) {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO offline_players(plr_name, uuid) VALUES (?, ?) " +
-                        "ON CONFLICT(plr_name) DO UPDATE SET uuid=excluded.uuid")) {
-            ps.setString(1, playerName);
-            ps.setString(2, uuid.toString());
-            ps.executeUpdate();
+    public void saveOfflinePlayer(UUID uuid, String playerName) {
+        try {
+            // Check If UUID already exists
+            boolean uuidExists = false;
+            PreparedStatement ps1 = connection.prepareStatement(
+                "SELECT 1 FROM offline_players WHERE uuid = ? LIMIT 1");
+            ps1.setString(1, uuid.toString());
+            ResultSet rs1 = ps1.executeQuery();
+            if (rs1.next()) {
+                uuidExists = true;
+            }
+
+            // Check If the Player Name already exists
+            boolean nameExists = false;
+            PreparedStatement ps2 = connection.prepareStatement(
+                "SELECT 1 FROM offline_players WHERE plr_name = ? LIMIT 1");
+            ps2.setString(1, playerName);
+            ResultSet rs2 = ps2.executeQuery();
+            if (rs2.next()) {
+                nameExists = true;
+            }
+
+
+            // Delete Row with UUID if uuidExists = true
+            if (uuidExists) {
+                PreparedStatement ps3 = connection.prepareStatement(
+                    "DELETE FROM offline_players WHERE uuid = ?");
+                ps3.setString(1, uuid.toString());
+                ps3.executeUpdate();
+            }
+
+            // Delete Row with Name if nameExists = true
+            if (nameExists) {
+                PreparedStatement ps4 = connection.prepareStatement(
+                    "DELETE FROM offline_players WHERE plr_name = ?");
+                ps4.setString(1, playerName);
+                ps4.executeUpdate();
+            }
+
+
+            // Insert new UUID and Name
+            if (uuidExists || nameExists) {
+                PreparedStatement ps5 = connection.prepareStatement(
+                    "REPLACE INTO offline_players(uuid, plr_name) VALUES (?, ?)");
+                ps5.setString(1, uuid.toString());
+                ps5.setString(2, playerName);
+                ps5.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -247,12 +312,7 @@ public class HomeManager {
             ps.setString(1, uuid.toString());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                String playerName = rs.getString("plr_name");
-                if (playerName != null) {
-                    return playerName;
-                } else {
-                    return null;
-                }
+                return rs.getString("plr_name");
             }
         } catch (SQLException e) {
             e.printStackTrace();

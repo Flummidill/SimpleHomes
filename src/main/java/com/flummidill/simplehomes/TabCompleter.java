@@ -29,14 +29,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             case "sethome":
                 return autocompleteUnsetHomes(uuid, args);
 
-            case "home":
-                return autocompleteExistingHomes(uuid, args);
-
-            case "delhome":
+            case "home", "delhome":
                 return autocompleteExistingHomes(uuid, args);
 
             case "homeadmin":
-                return autocompleteHomeAdmin(player, args);
+                return autocompleteHomeAdmin(args);
 
             default:
                 return Collections.emptyList();
@@ -75,7 +72,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         return Collections.emptyList();
     }
 
-    private List<String> autocompleteHomeAdmin(Player sender, String[] args) {
+    private List<String> autocompleteHomeAdmin(String[] args) {
         if (args.length == 1) {
             List<String> subcommands = Arrays.asList("sethome", "home", "delhome", "maxhomes");
             return filterByPrefix(subcommands, args[0]);
@@ -107,7 +104,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             String subcommand = args[0].toLowerCase();
             String targetName = args[1];
             Player target = Bukkit.getPlayerExact(targetName);
-            UUID targetUUID = null;
+            UUID targetUUID;
 
             if (target != null) {
                 targetUUID = target.getUniqueId();
