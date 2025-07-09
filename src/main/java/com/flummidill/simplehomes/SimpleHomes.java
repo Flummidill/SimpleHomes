@@ -115,7 +115,7 @@ public class SimpleHomes extends JavaPlugin {
 
                 if (response.statusCode() == 200) {
                     JSONObject json = new JSONObject(response.body());
-                    return json.getString("tag_name");
+                    return json.getString("tag_name").split("v")[1];
                 } else {
                     return "error|java.net.ConnectException: Connection Failed with StatusCode " + response.statusCode() + "\n        at SimpleHomes.jar//com.flummidill.simplehomes.SimpleHomes.getLatestVersion(SimpleHomes.java:77)";
                 }
