@@ -117,7 +117,7 @@ public class SimpleHomes extends JavaPlugin {
                     JSONObject json = new JSONObject(response.body());
                     return json.getString("tag_name").split("v")[1];
                 } else {
-                    return "error|java.net.ConnectException: Connection Failed with StatusCode " + response.statusCode() + "\n        at SimpleHomes.jar//com.flummidill.simplehomes.SimpleHomes.getLatestVersion(SimpleHomes.java:77)";
+                    return "error|java.net.ConnectException: Connection Failed with Code " + response.statusCode() + "\n        at SimpleHomes.jar//com.flummidill.simplehomes.SimpleHomes.getLatestVersion(SimpleHomes.java)";
                 }
             } catch (IOException | InterruptedException e) {
                 getLogger().warning("Failed to check for Updates!");

@@ -261,13 +261,11 @@ public class HomeManager {
 
 
             // Insert new UUID and Name
-            if (uuidExists || nameExists) {
-                PreparedStatement ps5 = connection.prepareStatement(
+            PreparedStatement ps5 = connection.prepareStatement(
                     "REPLACE INTO offline_players(uuid, plr_name) VALUES (?, ?)");
-                ps5.setString(1, uuid.toString());
-                ps5.setString(2, playerName);
-                ps5.executeUpdate();
-            }
+            ps5.setString(1, uuid.toString());
+            ps5.setString(2, playerName);
+            ps5.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
