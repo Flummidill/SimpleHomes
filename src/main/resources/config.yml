@@ -9,4 +9,4 @@ max-homes: 3
 
 # The Config Version
 # Do not change this Value
-config-version: 1.1.0
+config-version: ${project.version}
