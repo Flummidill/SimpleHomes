@@ -1,6 +1,17 @@
-<div align="center">
+<div align="center" id="toc">
   <img src="https://github.com/Flummidill/SimpleHomes/blob/1.1.2/icons/SimpleHomes-250x250.png?raw=true" alt="SimpleHomes-Icon">
-  <h1>SimpleHomes</h1>
+
+  <ul style="list-style: none">
+    <summary>
+      <h1>SimpleHomes</h1>
+    </summary>
+  </ul>
+  
+  <a href="https://github.com/Flummidill/Flummis.Grate.Menu/releases">
+    <img src="https://img.shields.io/github/downloads/Flummidill/SimpleHomes/v1.1.3/SimpleHomes-1.1.3.jar?style=for-the-badge&label=Downloads&color=29A100"</img>
+  </a>
+
+  <hr/>
 </div>
 
 ### Commands:
