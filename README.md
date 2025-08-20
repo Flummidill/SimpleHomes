@@ -1,6 +1,8 @@
 <div align="center" id="toc">
-  <img src="https://github.com/Flummidill/SimpleHomes/blob/1.1.3/icons/SimpleHomes-250x250.png?raw=true" alt="SimpleHomes-Icon">
-
+  <a href="https://github.com/Flummidill/SimpleHomes/releases">
+    <img src="https://github.com/Flummidill/SimpleHomes/blob/1.1.3/icons/SimpleHomes-250x250.png?raw=true" alt="SimpleHomes-Icon">
+  </a>
+  
   <ul style="list-style: none">
     <summary>
       <h1>SimpleHomes</h1>
