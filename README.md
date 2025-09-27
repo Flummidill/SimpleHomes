@@ -18,7 +18,7 @@
 <hr/>
 
 
-## ✨ Features
+## 🎯 Features
 - **Easily set Homes**
 Players can set, teleport to, and delete their own homes, making navigation and survival much more convenient.
 
