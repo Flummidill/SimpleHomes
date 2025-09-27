@@ -12,9 +12,25 @@
   <a href="https://github.com/Flummidill/SimpleHomes/releases">
     <img src="https://img.shields.io/github/downloads/Flummidill/SimpleHomes/v1.1.3/SimpleHomes-1.1.3.jar?style=for-the-badge&label=Downloads&color=29A100"</img>
   </a>
-
-  <hr/>
 </div>
+
+
+<hr/>
+
+
+## ✨ Features
+- **Easily set Homes**
+Players can set, teleport to, and delete their own homes, making navigation and survival much more convenient.
+
+- **Admin Home Management**
+Admins can set, teleport to, delete, and adjust the max number of homes for any player, giving full control when assisting or moderating.
+
+- **Customizable Home Limits**
+Define how many homes players can set by default, keeping balance between convenience and fairness on your server.
+
+
+<hr/>
+
 
 ### Commands:
 ```
