@@ -3,7 +3,7 @@
   
   <h1>SimpleHomes</h1>
   <a href="https://modrinth.com/plugin/simple_homes/versions">
-    <img src="https://img.shields.io/modrinth/dt/simple_homes?style=for-the-badge&label=Downloads&color=29A100" alt="SimpleHomes-Icon">
+    <img src="https://img.shields.io/modrinth/dt/simple_homes?style=for-the-badge&label=Downloads&color=29A100">
   </a>
 </div>
 
