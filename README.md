@@ -46,4 +46,5 @@ simplehomes.admin (Default: false) - Allow use of Admin Commands and bypassing H
 ### Config:
 ```
 max-homes - Set the default Maximum Number of Homes a Player can set
+admin-tp-delay - Set if Admins should be able to teleport to Homes instantly when using /homeadmin
 ```
