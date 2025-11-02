@@ -20,13 +20,13 @@
 
 ## 🎯 Features
 - **Easily set Homes**
-Players can set, teleport to, and delete their own homes, making navigation and survival much more convenient.
+Players can set, teleport to, and delete their own homes.
 
 - **Admin Home Management**
-Admins can set, teleport to, delete, and adjust the max number of homes for any player, giving full control when assisting or moderating.
+Admins can set, teleport to, delete, and adjust the max number of homes for any player.
 
 - **Customizable Home Limits**
-Define how many homes players can set by default, keeping balance between convenience and fairness on your server.
+Define how many homes players can set by default.
 
 
 <hr/>
