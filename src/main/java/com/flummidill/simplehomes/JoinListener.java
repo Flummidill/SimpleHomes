@@ -8,13 +8,24 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.ChatColor;
 
+
 public class JoinListener implements Listener {
 
+    private final SimpleHomes plugin;
+    private final HomeManager manager;
+
     private boolean sendUpdateNotification = false;
+
+
+    public JoinListener(SimpleHomes plugin, HomeManager manager) {
+        this.plugin = plugin;
+        this.manager = manager;
+    }
 
     public void setUpdateAvailable(boolean updateAvailable) {
         this.sendUpdateNotification = updateAvailable;
     }
+
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {

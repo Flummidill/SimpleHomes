@@ -3,17 +3,21 @@ package com.flummidill.simplehomes;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 public class TabCompleter implements org.bukkit.command.TabCompleter {
 
+    private final SimpleHomes plugin;
     private final HomeManager manager;
 
-    public TabCompleter(HomeManager manager) {
+
+    public TabCompleter(SimpleHomes plugin, HomeManager manager) {
+        this.plugin = plugin;
         this.manager = manager;
     }
+
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -95,10 +99,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                 }
             }
         
-            return playerNames.stream()
-                    .filter(name -> name.toLowerCase().startsWith(prefix))
-                    .sorted(String.CASE_INSENSITIVE_ORDER)
-                    .collect(Collectors.toList());
+            return filterByPrefix(playerNames, prefix);
         }
         if (args.length == 3) {
             String subcommand = args[0].toLowerCase();

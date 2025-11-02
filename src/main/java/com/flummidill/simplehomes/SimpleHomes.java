@@ -11,35 +11,89 @@ import java.net.http.HttpResponse;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+
 public class SimpleHomes extends JavaPlugin {
 
+    private HomeManager manager;
     private JoinListener joinListener;
-    private HomeManager homeManager;
+
 
     @Override
     public void onEnable() {
         getLogger().info("~ Created by Flummidill ~");
 
-        // Initialize Event Listeners
-        getLogger().info("Initializing Event Listeners...");
-        initializeJoinListener();
-
-        // Check for Updates
-        getLogger().info("Checking for Updates...");
-        checkForUpdates();
-
         // Initialize Home-Manager
         getLogger().info("Initializing Home-Manager...");
-        homeManager = new HomeManager(this);
-        
+        manager = new HomeManager(this);
+
+        // Initialize Event Listeners
+        getLogger().info("Initializing Event Listeners...");
+        initializeEventListeners();
+
         // Load Configuration
         getLogger().info("Loading Configuration...");
         loadConfig();
 
         // Register Commands
         getLogger().info("Registering Commands...");
-        CommandHandler commandHandler = new CommandHandler(this, homeManager);
-        TabCompleter tabCompleter = new TabCompleter(homeManager);
+        registerCommands();
+
+        // Check for Updates
+        getLogger().info("Checking for Updates...");
+        checkForUpdates();
+    }
+
+
+    public void initializeEventListeners() {
+        joinListener = new JoinListener(this, this.manager);
+        getServer().getPluginManager().registerEvents(joinListener, this);
+    }
+
+    private void loadConfig() {
+        int maxHomes = getConfig().getInt("max-homes", 3);
+        boolean adminTeleportDelay = getConfig().getBoolean("admin-tp-delay", true);
+        String configVersion = getConfig().getString("config-version", "1.0.0");
+        String currentVersion = getDescription().getVersion();
+
+        saveResource("config.yml", true);
+        reloadConfig();
+        FileConfiguration config = getConfig();
+
+        if (maxHomes < 1 || maxHomes > 50) {
+            getLogger().warning("Configuration Error: \"max-homes\" was configured incorrectly and reset to \"3\".");
+            maxHomes = 3;
+        }
+        config.set("max-homes", maxHomes);
+
+        if (!(adminTeleportDelay == true || adminTeleportDelay == false)) {
+            getLogger().warning("Configuration Error: \"admin-tp-delay\" was configured incorrectly and reset to \"true\".");
+            adminTeleportDelay = true;
+        }
+        manager.adminTeleportDelay = adminTeleportDelay;
+        config.set("admin-tp-delay", adminTeleportDelay);
+
+
+        if ("1.0.0".equals(configVersion)) {
+            getLogger().info("Configuration Update: \"config-version\" has been updated to \"" + currentVersion + "\".");
+            manager.updatePlugin();
+            configVersion = currentVersion;
+        } else if (isNewerVersion(configVersion, "1.0.0")) {
+            if (isOlderVersion(configVersion, currentVersion)) {
+                getLogger().info("Configuration Update: \"config-version\" has been updated to \"" + currentVersion + "\".");
+                configVersion = currentVersion;
+            }
+        } else {
+            getLogger().warning("Configuration Error: \"config-version\" was configured incorrectly and reset to \"" + currentVersion + "\".");
+            configVersion = currentVersion;
+        }
+        config.set("config-version", configVersion);
+
+        saveConfig();
+    }
+
+    private void registerCommands() {
+        CommandHandler commandHandler = new CommandHandler(this, this.manager);
+        TabCompleter tabCompleter = new TabCompleter(this, this.manager);
 
         getCommand("sethome").setExecutor(commandHandler);
         getCommand("home").setExecutor(commandHandler);
@@ -66,39 +120,6 @@ public class SimpleHomes extends JavaPlugin {
         } else {
             getLogger().warning("Failed to Check for Updates!\n" + latestVersion[1]);
         }
-    }
-
-    private void loadConfig() {
-        int maxHomes = getConfig().getInt("max-homes", 3);
-        String configVersion = getConfig().getString("config-version", "1.0.0");
-        String currentVersion = getDescription().getVersion();
-
-        saveResource("config.yml", true);
-        reloadConfig();
-        FileConfiguration config = getConfig();
-
-        if (maxHomes < 1 || maxHomes > 50) {
-            getLogger().warning("Configuration Error: \"max-homes\" was configured incorrectly and reset to \"3\".");
-            maxHomes = 3;
-        }
-        config.set("max-homes", maxHomes);
-
-        if ("1.0.0".equals(configVersion)) {
-            getLogger().info("Configuration Update: \"config-version\" has been updated to \"" + currentVersion + "\".");
-            homeManager.updatePlugin();
-            configVersion = currentVersion;
-        } else if (isNewerVersion(configVersion, "1.0.0")) {
-            if (isOlderVersion(configVersion, currentVersion)) {
-                getLogger().info("Configuration Update: \"config-version\" has been updated to \"" + currentVersion + "\".");
-                configVersion = currentVersion;
-            }
-        } else {
-            getLogger().warning("Configuration Error: \"config-version\" was configured incorrectly and reset to \"" + currentVersion + "\".");
-            configVersion = currentVersion;
-        }
-        config.set("config-version", configVersion);
-
-        saveConfig();
     }
 
     public String getLatestVersion() {
@@ -163,10 +184,5 @@ public class SimpleHomes extends JavaPlugin {
         }
 
         return false;
-    }
-
-    public void initializeJoinListener() {
-        joinListener = new JoinListener();
-        getServer().getPluginManager().registerEvents(joinListener, this);
     }
 }

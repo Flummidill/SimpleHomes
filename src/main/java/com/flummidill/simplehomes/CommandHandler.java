@@ -1,12 +1,11 @@
 package com.flummidill.simplehomes;
 
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-
 import java.util.*;
+
 
 public class CommandHandler implements CommandExecutor {
 
@@ -16,10 +15,12 @@ public class CommandHandler implements CommandExecutor {
     private final Map<UUID, TeleportTask> teleportTasks = new HashMap<>();
     private final Map<UUID, TeleportTaskAdmin> teleportTasksAdmin = new HashMap<>();
 
+
     public CommandHandler(SimpleHomes plugin, HomeManager manager) {
         this.plugin = plugin;
         this.manager = manager;
     }
+
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -155,27 +156,33 @@ public class CommandHandler implements CommandExecutor {
         int maxHomes = manager.getMaxHomes(uuid);
         int homeNum;
 
-        try {
-            homeNum = Integer.parseInt(arg);
-        } catch (NumberFormatException e) {
-            player.sendMessage("§cHome number must be a valid integer.");
-            return false;
-        }
-
-        if (!player.hasPermission("simplehomes.admin")) {
-            if (homeNum < 1 || homeNum > maxHomes) {
-                player.sendMessage("§cYou can only delete homes between 1 and " + maxHomes + ".");
+        if (arg.equals("*")) {
+            manager.deleteAllHomes(uuid);
+            player.sendMessage("§aAll your Homes have been deleted!");
+        } else {
+            try {
+                homeNum = Integer.parseInt(arg);
+            } catch (NumberFormatException e) {
+                player.sendMessage("§cHome must be a Number.");
                 return false;
             }
+
+            if (!player.hasPermission("simplehomes.admin")) {
+                if (homeNum < 1 || homeNum > maxHomes) {
+                    player.sendMessage("§cYou can only delete homes between 1 and " + maxHomes + ".");
+                    return false;
+                }
+            }
+
+            if (!manager.homeExists(uuid, homeNum)) {
+                player.sendMessage("§cHome " + homeNum + " does not exist.");
+                return false;
+            }
+
+            manager.deleteHome(uuid, homeNum);
+            player.sendMessage("§aHome " + homeNum + " deleted!");
         }
 
-        if (!manager.homeExists(uuid, homeNum)) {
-            player.sendMessage("§cHome " + homeNum + " does not exist.");
-            return false;
-        }
-
-        manager.deleteHome(uuid, homeNum);
-        player.sendMessage("§aHome " + homeNum + " deleted!");
         return true;
     }
 
@@ -197,11 +204,23 @@ public class CommandHandler implements CommandExecutor {
 
         targetName = manager.getOfflinePlayerName(targetUUID);
 
-        int number;
-        try {
-            number = Integer.parseInt(numberStr);
-        } catch (NumberFormatException e) {
-            sender.sendMessage("§cNumber must be a valid integer.");
+        int number = -1;
+        if (numberStr.equals("*")) {
+            if (!action.equals("delhome")) {
+                sender.sendMessage("§cHome must be a Number.");
+                return false;
+            }
+        } else {
+            try {
+                number = Integer.parseInt(numberStr);
+            } catch (NumberFormatException e) {
+                sender.sendMessage("§cHome must be a Number.");
+                return false;
+            }
+        }
+
+        if (number == -1 && !action.equals("delhome")) {
+            sender.sendMessage("§cHome must be a Number.");
             return false;
         }
 
@@ -225,12 +244,18 @@ public class CommandHandler implements CommandExecutor {
                 
                 // Cancel any ongoing Teleport Tasks for Player
                 cancelTeleport(sender);
-                TeleportTaskAdmin task = new TeleportTaskAdmin(plugin, sender, loc, 5, number, targetName);
+                TeleportTaskAdmin task = new TeleportTaskAdmin(plugin, manager, sender, loc, 5, number, targetName);
                 task.start();
                 teleportTasksAdmin.put(sender.getUniqueId(), task);
                 break;
 
             case "delhome":
+                if (numberStr.equals("*")) {
+                    manager.deleteAllHomes(targetUUID);
+                    sender.sendMessage("§aDeleted all Homes of " + targetName + ".");
+                    break;
+                }
+
                 if (!manager.homeExists(targetUUID, number)) {
                     sender.sendMessage("§cHome " + number + " does not exist for " + targetName + ".");
                     return false;

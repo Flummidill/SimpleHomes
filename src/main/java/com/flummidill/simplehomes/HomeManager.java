@@ -8,11 +8,16 @@ import java.io.File;
 import java.sql.*;
 import java.util.*;
 
+
 public class HomeManager {
 
     private final SimpleHomes plugin;
+
     private final File dbFile;
     private Connection connection;
+
+    public boolean adminTeleportDelay = false;
+
 
     public HomeManager(SimpleHomes plugin) {
         this.plugin = plugin;
@@ -20,6 +25,7 @@ public class HomeManager {
         openConnection();
         createTables();
     }
+
 
     private void openConnection() {
         try {
@@ -198,6 +204,16 @@ public class HomeManager {
         }
     }
 
+    public void deleteAllHomes(UUID uuid) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM homes WHERE uuid = ?")) {
+            ps.setString(1, uuid.toString());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Location getHome(UUID uuid, int homeNum) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT world, x, y, z, yaw, pitch FROM homes WHERE uuid = ? AND home_num = ?")) {
@@ -316,5 +332,9 @@ public class HomeManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void setAdminTeleportDelay (boolean value) {
+        this.adminTeleportDelay = value;
     }
 }

@@ -1,7 +1,36 @@
-<div align="center">
-  <img src="https://github.com/Flummidill/SimpleHomes/blob/1.1.2/icons/SimpleHomes-250x250.png?raw=true" alt="SimpleHomes-Icon">
-  <h1>SimpleHomes</h1>
+<div align="center" id="toc">
+  <a href="https://github.com/Flummidill/SimpleHomes/releases">
+    <img src="https://github.com/Flummidill/SimpleHomes/blob/HEAD/icons/SimpleHomes-250x250.png?raw=true" alt="SimpleHomes-Icon">
+  </a>
+
+  <ul style="list-style: none">
+    <summary>
+      <h1>SimpleHomes</h1>
+    </summary>
+  </ul>
+
+  <a href="https://github.com/Flummidill/SimpleHomes/releases">
+    <img src="https://img.shields.io/github/downloads/Flummidill/SimpleHomes/v1.2.0/SimpleHomes-1.2.0.jar?style=for-the-badge&label=Downloads&color=29A100"</img>
+  </a>
 </div>
+
+
+<hr/>
+
+
+## 🎯 Features
+- **Easily set Homes**
+  Players can set, teleport to, and delete their own homes.
+
+- **Admin Home Management**
+  Admins can set, teleport to, delete, and adjust the max number of homes for any player.
+
+- **Customizable Home Limits**
+  Define how many homes players can set by default.
+
+
+<hr/>
+
 
 ### Commands:
 ```

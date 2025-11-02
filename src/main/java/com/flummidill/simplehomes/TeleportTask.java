@@ -6,16 +6,18 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+
 public class TeleportTask {
 
     private final SimpleHomes plugin;
     private final Player player;
     private final Location targetLocation;
+    private int secondsLeft;
     private final int homeNum;
 
-    private int secondsLeft;
     private Location startLocation;
     private BukkitRunnable task;
+
 
     public TeleportTask(SimpleHomes plugin, Player player, Location targetLocation, int seconds, int homeNum) {
         this.plugin = plugin;
@@ -24,6 +26,7 @@ public class TeleportTask {
         this.secondsLeft = seconds;
         this.homeNum = homeNum;
     }
+
 
     public void start() {
         startLocation = player.getLocation().getBlock().getLocation();
