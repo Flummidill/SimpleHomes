@@ -1,32 +1,21 @@
-<div align="center" id="toc">
-  <a href="https://github.com/Flummidill/SimpleHomes/releases">
-    <img src="https://github.com/Flummidill/SimpleHomes/blob/HEAD/icons/SimpleHomes-250x250.png?raw=true" alt="SimpleHomes-Icon">
-  </a>
+<div align="center">
+  <img src="https://github.com/Flummidill/SimpleHomes/blob/HEAD/icons/SimpleHomes-250x250.png?raw=true" alt="SimpleHomes-Icon">
+  
+  <h1>SimpleHomes</h1>
 
-  <ul style="list-style: none">
-    <summary>
-      <h1>SimpleHomes</h1>
-    </summary>
-  </ul>
-
-  <a href="https://github.com/Flummidill/SimpleHomes/releases">
-    <img src="https://img.shields.io/github/downloads/Flummidill/SimpleHomes/v1.2.0/SimpleHomes-1.2.0.jar?style=for-the-badge&label=Downloads&color=29A100"</img>
-  </a>
+  <img src="https://img.shields.io/modrinth/dt/simple_homes?style=for-the-badge&label=Downloads&color=29A100" alt="SimpleHomes-Icon">
 </div>
-
-
-<hr/>
 
 
 ## 🎯 Features
 - **Easily set Homes**
-  Players can set, teleport to, and delete their own homes.
+Players can set, teleport to, and delete their own homes, making navigation and survival much more convenient.
 
 - **Admin Home Management**
-  Admins can set, teleport to, delete, and adjust the max number of homes for any player.
+Admins can set, teleport to, delete, and adjust the max number of homes for any player, giving full control when assisting or moderating.
 
 - **Customizable Home Limits**
-  Define how many homes players can set by default.
+Define how many homes players can set by default, keeping balance between convenience and fairness on your server.
 
 
 <hr/>
