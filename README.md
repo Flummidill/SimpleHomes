@@ -2,8 +2,9 @@
   <img src="https://github.com/Flummidill/SimpleHomes/blob/HEAD/icons/SimpleHomes-250x250.png?raw=true" alt="SimpleHomes-Icon">
   
   <h1>SimpleHomes</h1>
-
-  <img src="https://img.shields.io/modrinth/dt/simple_homes?style=for-the-badge&label=Downloads&color=29A100" alt="SimpleHomes-Icon">
+  <a href="https://modrinth.com/plugin/simple_homes/versions">
+    <img src="https://img.shields.io/modrinth/dt/simple_homes?style=for-the-badge&label=Downloads&color=29A100" alt="SimpleHomes-Icon">
+  </a>
 </div>
 
 
