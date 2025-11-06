@@ -2,6 +2,7 @@ package com.flummidill.simplehomes;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URI;
@@ -123,7 +124,7 @@ public class SimpleHomes extends JavaPlugin {
     }
 
     public String getLatestVersion() {
-        String apiUrl = "https://api.github.com/repos/Flummidill/SimpleHomes/releases/latest";
+        String apiUrl = "https://api.modrinth.com/v2/project/simple_homes/version";
 
         try (HttpClient client = HttpClient.newHttpClient()) {
             HttpRequest request = HttpRequest.newBuilder()
@@ -135,13 +136,19 @@ public class SimpleHomes extends JavaPlugin {
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
                 if (response.statusCode() == 200) {
-                    JSONObject json = new JSONObject(response.body());
-                    return json.getString("tag_name").split("v")[1];
+                    JSONArray jsonArray = new JSONArray(response.body());
+                    System.out.println(jsonArray.toString());
+                    if (!jsonArray.isEmpty()) {
+                        JSONObject latestVersion = jsonArray.getJSONObject(0);
+                        return latestVersion.getString("version_number");
+                    } else {
+                        return "error|No Version Data Found: Project has no Versions on Modrinth";
+                    }
                 } else {
-                    return "error|java.net.ConnectException: Connection Failed with Code " + response.statusCode() + "\n        at SimpleHomes.jar//com.flummidill.simplehomes.SimpleHomes.getLatestVersion(SimpleHomes.java)";
+                    return "error|No Version Data Found: Failed to Connect to Modrinth API";
                 }
             } catch (IOException | InterruptedException e) {
-                getLogger().warning("Failed to check for Updates!");
+                System.out.println("Failed to check for Updates!");
 
                 StringWriter stackTrace = new StringWriter();
                 e.printStackTrace(new PrintWriter(stackTrace));

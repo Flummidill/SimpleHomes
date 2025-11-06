@@ -190,24 +190,31 @@ public class CommandHandler implements CommandExecutor {
         String action = args[0].toLowerCase();
         String targetName = args[1];
         String numberStr = args[2];
-        UUID targetUUID;
 
-        Player target = Bukkit.getPlayerExact(targetName);
-        if (target != null) {
-            targetUUID = target.getUniqueId();
-        } else if (manager.getOfflinePlayerUUID(targetName) != null) {
-            targetUUID = manager.getOfflinePlayerUUID(targetName);
+        UUID targetUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        if (targetName.equals("*")) {
+            if (!action.equals("delhome")) {
+                sender.sendMessage("§cYou can only use Player * with the delhome Command.");
+                return false;
+            }
         } else {
-            sender.sendMessage("§cPlayer '" + targetName + "' not found.");
-            return false;
-        }
+            Player target = Bukkit.getPlayerExact(targetName);
+            if (target != null) {
+                targetUUID = target.getUniqueId();
+            } else if (manager.getOfflinePlayerUUID(targetName) != null) {
+                targetUUID = manager.getOfflinePlayerUUID(targetName);
+            } else {
+                sender.sendMessage("§cPlayer '" + targetName + "' not found.");
+                return false;
+            }
 
-        targetName = manager.getOfflinePlayerName(targetUUID);
+            targetName = manager.getOfflinePlayerName(targetUUID);
+        }
 
         int number = -1;
         if (numberStr.equals("*")) {
             if (!action.equals("delhome")) {
-                sender.sendMessage("§cHome must be a Number.");
+                sender.sendMessage("§cYou can only use Number * with the delhome Command.");
                 return false;
             }
         } else {
@@ -219,8 +226,13 @@ public class CommandHandler implements CommandExecutor {
             }
         }
 
+        if (targetUUID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000")) && !action.equals("delhome")) {
+            sender.sendMessage("§cYou can only use Player * with the delhome Command.");
+            return false;
+        }
+
         if (number == -1 && !action.equals("delhome")) {
-            sender.sendMessage("§cHome must be a Number.");
+            sender.sendMessage("§cYou can only use Number * with the delhome Command.");
             return false;
         }
 
@@ -250,6 +262,17 @@ public class CommandHandler implements CommandExecutor {
                 break;
 
             case "delhome":
+                if (targetName.equals("*")) {
+                    if (numberStr.equals("*")) {
+                        manager.deleteEveryHome();
+                        sender.sendMessage("§aDeleted all Homes of all Players.");
+                    } else {
+                        manager.deleteAllHomesWithNumber(number);
+                        sender.sendMessage("§aDeleted all Homes with Number " + number + ".");
+                    }
+                    break;
+                }
+
                 if (numberStr.equals("*")) {
                     manager.deleteAllHomes(targetUUID);
                     sender.sendMessage("§aDeleted all Homes of " + targetName + ".");

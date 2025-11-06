@@ -214,6 +214,25 @@ public class HomeManager {
         }
     }
 
+    public void deleteAllHomesWithNumber(int homeNum) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM homes WHERE home_num = ?")) {
+            ps.setInt(1, homeNum);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteEveryHome() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM homes")) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Location getHome(UUID uuid, int homeNum) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT world, x, y, z, yaw, pitch FROM homes WHERE uuid = ? AND home_num = ?")) {
